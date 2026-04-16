@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>by jorja abernethy.</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
+  <style>
+    /* ── VARIABLES ── */
+    :root {
+      --rose-taupe:   #a8897a;
+      --coffee:       #7a5c4e;
+      --black:        #1a1817;
+      --cream:        #f0e9db;
+      --blush:        #ddc8b4;
+      --white:        #ffffff;
+
+      --font-display: 'Playfair Display', serif;
+      --font-body:    'Playfair Display', serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--cream);
+      color: var(--black);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 99999;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.8rem 3.5rem;
+      mix-blend-mode: multiply;
+    }
+    .nav-logo {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--black);
+      letter-spacing: -0.01em;
+      text-decoration: none;
+    }
+
+    .nav-logo img,
+    .footer-logo img {
+      height: 60px; /* adjust to taste */
+      width: auto;
+      display: block;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.2rem;
+      list-style: none;
+      align-items: center; /* 🔥 centers everything vertically */
+    }
+
+    .nav-links li {
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-links a {
+      font-family: var(--font-display);
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--black);
+      text-decoration: none;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      padding: 3rem 2rem;
+      border-radius: 999px;
+
+      line-height: 1;
+      height: 100%; /* 🔥 keeps hitbox centered */
+
+      transition: 0.25s;
+      position: relative;
+    }
+
+    /* ACTIVE STATE (like your second site) */
+    .nav-links a.active {
+      color:var(--coffee);
+    }
+
+    .nav-links a.active::after {
+      content:"";
+      position:absolute;
+      left:15%;
+      bottom:6px;
+      width:70%;
+      height:2px;
+      background:var(--coffee);
+      border-radius:2px;
+    }
+
+    .nav-links a:hover {
+      background:rgba(122,92,78,0.12);
+      transform:translateY(-1px);
+    }
+
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    /* left panel */
+    .hero-left {
+      background: var(--black);
+      display: flex; flex-direction: column;
+      justify-content: center;
+      padding: 6rem 4rem 5rem;
+      position: relative;
+      z-index: 2;
+    }
+    .hero-eyebrow {
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--rose-taupe);
+      margin-bottom: 1.8rem;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.3s forwards;
+    }
+    .hero-title {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: clamp(3.2rem, 5.5vw, 6rem);
+      font-weight: 900;
+      line-height: 0.92;
+      color: var(--white);
+      letter-spacing: -0.03em;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.5s forwards;
+    }
+    .hero-title span { color: var(--rose-taupe); }
+    .hero-sub {
+      font-size: 0.88rem;
+      line-height: 1.8;
+      color: var(--blush);
+      max-width: 360px;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.75s forwards;
+    }
+    .hero-cta {
+      display: inline-block;
+      margin-top: 2.8rem;
+      padding: 1rem 2.4rem;
+      background: var(--rose-taupe);
+      color: var(--white);
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.3s, transform 0.3s;
+      opacity: 0;
+      animation: fadeUp 0.9s 1s forwards;
+    }
+    .hero-cta:hover { background: var(--coffee); transform: translateY(-2px); }
+
+    /* right panel */
+    .hero-right {
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: brightness(0.88) saturate(0.8);
+      transform: scale(1.06);
+      animation: zoomIn 1.4s 0.2s ease forwards;
+    }
+    .hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(168,137,122,0.25) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    /* floating pill */
+    .hero-pill {
+      position: absolute;
+      bottom: 3rem; right: 3rem;
+      width: 120px; height: 120px;
+      border-radius: 50%;
+      background: var(--rose-taupe);
+      display: flex; align-items: center; justify-content: center;
+      text-align: center;
+      padding: 1rem;
+      opacity: 0;
+      animation: fadeIn 1s 1.2s forwards;
+    }
+    .hero-pill p {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 0.72rem;
+      line-height: 1.5;
+      color: var(--white);
+    }
+
+    /* scroll line */
+    .scroll-line {
+      position: absolute;
+      bottom: 2.4rem; left: 4rem;
+      display: flex; align-items: center; gap: 1rem;
+      opacity: 0;
+      animation: fadeIn 1s 1.4s forwards;
+    }
+    .scroll-line span {
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--blush);
+    }
+    .scroll-line::before {
+      content: '';
+      display: block;
+      width: 40px; height: 1px;
+      background: var(--rose-taupe);
+    }
+
+    /* ── SECTION COMMON ── */
+    section { position: relative; }
+
+    .section-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--coffee);
+      margin-bottom: 0.8rem;
+    }
+    .section-heading {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -0.03em;
+    }
+
+    /* ── GALLERY ── */
+    #gallery {
+      background: var(--cream);
+      padding: 7rem 3.5rem;
+    }
+    .gallery-header {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      margin-bottom: 4rem;
+    }
+    .gallery-title { font-size: clamp(2.8rem, 4.5vw, 5rem); color: var(--black); }
+    .gallery-intro {
+      max-width: 320px;
+      font-size: 0.88rem;
+      line-height: 1.9;
+      color: var(--coffee);
+      padding-bottom: 0.4rem;
+    }
+
+    /* masonry-ish grid */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-auto-rows: 60px;
+      gap: 12px;
+    }
+    .gallery-item {
+      overflow: hidden;
+      position: relative;
+    }
+    .gallery-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: saturate(0.85);
+      transition: transform 0.6s ease, filter 0.4s ease;
+      display: block;
+    }
+    .gallery-item:hover img { transform: scale(1.05); filter: saturate(1); }
+
+    .gallery-item .overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(26,24,23,0.55) 0%, transparent 60%);
+      opacity: 0; transition: opacity 0.4s;
+      display: flex; align-items: flex-end; padding: 1.2rem;
+    }
+    .gallery-item:hover .overlay { opacity: 1; }
+    .overlay span {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 0.8rem;
+      color: var(--white);
+      letter-spacing: 0.08em;
+    }
+
+    /* grid placements */
+    .g1  { grid-column: 1 / 6;   grid-row: 1 / 8;  }
+    .g2  { grid-column: 6 / 10;  grid-row: 1 / 5;  }
+    .g3  { grid-column: 10 / 13; grid-row: 1 / 7;  }
+    .g4  { grid-column: 6 / 8;   grid-row: 5 / 10; }
+    .g5  { grid-column: 8 / 13;  grid-row: 7 / 12; }
+    .g6  { grid-column: 1 / 4;   grid-row: 8 / 14; }
+    .g7  { grid-column: 4 / 8;   grid-row: 10 / 15;}
+    .g8  { grid-column: 8 / 11;  grid-row: 12 / 17;}
+    .g9  { grid-column: 11 / 13; grid-row: 12 / 17;}
+
+    /* ── ABOUT ── */
+    #about {
+      background: var(--black);
+      padding: 8rem 3.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+    }
+    .about-img-wrap {
+      position: relative;
+    }
+    .about-img-wrap img {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      object-fit: cover;
+      filter: saturate(0.75);
+      display: block;
+    }
+    /* decorative frame */
+    .about-img-wrap::before {
+      content: '';
+      position: absolute;
+      top: -20px; left: -20px;
+      right: 20px; bottom: 20px;
+      border: 1px solid var(--rose-taupe);
+      pointer-events: none;
+    }
+    .about-img-wrap::after {
+      content: '';
+      position: absolute;
+      bottom: -1.5rem; right: -1.5rem;
+      width: 100px; height: 100px;
+      background: var(--rose-taupe);
+      z-index: -1;
+    }
+    .about-content { color: var(--white); }
+    .about-content .section-label { color: var(--rose-taupe); }
+    .about-title {
+      font-size: clamp(2.5rem, 4vw, 4.5rem);
+      color: var(--white);
+      margin-bottom: 2rem;
+    }
+    .about-body {
+      font-size: 0.95rem;
+      line-height: 2;
+      color: var(--blush);
+      margin-bottom: 1.4rem;
+    }
+    .about-sig {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 2rem;
+      color: var(--rose-taupe);
+      margin-top: 2rem;
+    }
+
+    /* stats strip */
+    .about-stats {
+      display: flex; gap: 3rem;
+      margin-top: 3rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid rgba(168,137,122,0.3);
+    }
+    .stat-num {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: var(--rose-taupe);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--blush);
+      margin-top: 0.3rem;
+    }
+
+    /* ── CONTACT ── */
+    #contact {
+      background: var(--cream);
+      padding: 8rem 3.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: start;
+    }
+    .contact-info .section-label { margin-bottom: 0.8rem; }
+    .contact-title {
+      font-size: clamp(2.5rem, 4vw, 4.5rem);
+      color: var(--black);
+      margin-bottom: 2rem;
+    }
+    .contact-body {
+      font-size: 0.92rem;
+      line-height: 1.9;
+      color: var(--coffee);
+      margin-bottom: 2.5rem;
+    }
+    .contact-details { list-style: none; }
+    .contact-details li {
+      display: flex; align-items: center; gap: 1rem;
+      margin-bottom: 1.2rem;
+      font-size: 0.88rem;
+      color: var(--black);
+    }
+    .contact-details li .icon {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--rose-taupe);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .contact-details li .icon svg { width: 16px; height: 16px; fill: var(--white); }
+
+    /* form */
+    .contact-form { display: flex; flex-direction: column; gap: 1.4rem; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.4rem; }
+
+    .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+    .form-group label {
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--coffee);
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--rose-taupe);
+      padding: 0.75rem 0;
+      font-family: var(--font-body);
+      font-size: 0.92rem;
+      color: var(--black);
+      outline: none;
+      transition: border-color 0.3s;
+      width: 100%;
+    }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder { color: rgba(122,92,78,0.45); }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus { border-color: var(--coffee); }
+    .form-group textarea { resize: none; min-height: 110px; }
+    .form-group select {
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a8897a' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 4px center;
+      background-color: transparent;
+    }
+    .form-group select option { background: var(--cream); color: var(--black); }
+
+    .btn-submit {
+      align-self: flex-start;
+      padding: 1rem 2.8rem;
+      background: var(--black);
+      color: var(--white);
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      border: none;
+      transition: background 0.3s, transform 0.3s;
+      margin-top: 0.5rem;
+    }
+    .btn-submit:hover { background: var(--coffee); transform: translateY(-2px); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--black);
+      padding: 4rem 3.5rem 2.5rem;
+    }
+    .footer-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-bottom: 2rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid rgba(168,137,122,0.2);
+    }
+    .footer-logo {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1;
+    }
+    .footer-logo span { color: var(--rose-taupe); }
+
+    .footer-contact { display: flex; flex-direction: column; align-items: flex-end; gap: 0.8rem; }
+    .footer-contact a {
+      display: flex; align-items: center; gap: 0.6rem;
+      text-decoration: none;
+      color: var(--blush);
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+    .footer-contact a:hover { color: var(--rose-taupe); }
+    .footer-contact a svg { width: 18px; height: 18px; fill: var(--rose-taupe); }
+
+    .footer-bottom {
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-bottom p {
+      font-size: 0.7rem;
+      color: rgba(240,233,219,0.35);
+      letter-spacing: 0.1em;
+    }
+    .footer-nav { display: flex; gap: 2rem; }
+    .footer-nav a {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(240,233,219,0.35);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-nav a:hover { color: var(--rose-taupe); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes zoomIn {
+      from { transform: scale(1.12); }
+      to   { transform: scale(1.0); }
+    }
+
+    /* scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 1.4rem 1.8rem; }
+      .hero { grid-template-columns: 1fr; }
+      .hero-right { min-height: 55vh; }
+      .hero-left { padding: 7rem 1.8rem 3.5rem; }
+      #gallery { padding: 5rem 1.8rem; }
+      .gallery-header { flex-direction: column; gap: 1.5rem; align-items: flex-start; }
+      .gallery-grid {
+        grid-template-columns: repeat(6, 1fr);
+        grid-auto-rows: 50px;
+      }
+      .g1  { grid-column: 1 / 4;  grid-row: 1 / 7; }
+      .g2  { grid-column: 4 / 7;  grid-row: 1 / 5; }
+      .g3  { grid-column: 4 / 7;  grid-row: 5 / 10; }
+      .g4  { grid-column: 1 / 4;  grid-row: 7 / 11; }
+      .g5  { grid-column: 4 / 7;  grid-row: 10 / 14; }
+      .g6  { grid-column: 1 / 4;  grid-row: 11 / 16; }
+      .g7  { grid-column: 4 / 7;  grid-row: 14 / 19; }
+      .g8  { grid-column: 1 / 4;  grid-row: 16 / 20; }
+      .g9  { display: none; }
+      #about { grid-template-columns: 1fr; padding: 5rem 1.8rem; gap: 3rem; }
+      #contact { grid-template-columns: 1fr; padding: 5rem 1.8rem; gap: 3rem; }
+      .form-row { grid-template-columns: 1fr; }
+      footer { padding: 3rem 1.8rem 2rem; }
+      .footer-inner { flex-direction: column; align-items: flex-start; gap: 2rem; }
+      .footer-contact { align-items: flex-start; }
+      .footer-bottom { flex-direction: column; gap: 1rem; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- cursor -->
+  <div id="cursor"></div>
+
+  <!-- ── NAV ── -->
+  <nav>
+    <a href="#" class="nav-logo">
+      <img src="images/byjlogo.png" alt="Jorja Abernethy Logo">
+    </a>
+    <ul class="nav-links">
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <div class="hero-left">
+      <p class="hero-eyebrow">Mid-Canterbury — Based Photographer</p>
+      <h1 class="hero-title">Moments<br>worth<br><span>keeping.</span></h1>
+      <p class="hero-sub">Capturing the quiet, the candid, and the beautiful — stories told through light and feeling.</p>
+      <a href="#gallery" class="hero-cta">View My Work</a>
+      <div class="scroll-line"><span>Scroll</span></div>
+    </div>
+    <div class="hero-right">
+      <img src="Images/HERO.PNG" alt="Hero photography" class="hero-img" />
+      <div class="hero-overlay"></div>
+    </div>
+  </section>
+
+  <!-- ── GALLERY ── -->
+  <section id="gallery">
+    <div class="gallery-header reveal">
+      <div>
+        <p class="section-label">Portfolio</p>
+        <h2 class="section-heading gallery-title">Gallery.</h2>
+      </div>
+      <p class="gallery-intro">A curated collection of portraits — each one telling a story of people, 
+        places, and the work that shapes everyday life.</p>
+    </div>
+
+    <div class="gallery-grid">
+      <div class="gallery-item g1 reveal">
+        <img src="Images/GALLERY1.jpg" alt="Gallery photo 1" />
+        <div class="overlay"><span>Sports Shots</span></div>
+      </div>
+      <div class="gallery-item g2 reveal">
+        <img src="Images/GALLERY2.jpg" alt="Gallery photo 2" />
+        <div class="overlay"><span>Company Shoots</span></div>
+      </div>
+      <div class="gallery-item g3 reveal">
+        <img src="Images/GALLERY3.jpg" alt="Gallery photo 3" />
+        <div class="overlay"><span>SOMETHING</span></div>
+      </div>
+      <div class="gallery-item g4 reveal">
+        <img src="Images/GALLERY4.jpg" alt="Gallery photo 4" />
+        <div class="overlay"><span>SOMETHING</span></div>
+      </div>
+      <div class="gallery-item g5 reveal">
+        <img src="Images/GALLERY5.jpg" alt="Gallery photo 5" />
+        <div class="overlay"><span>SOMETHING</span></div>
+      </div>
+      <div class="gallery-item g6 reveal">
+        <img src="Images/GALLERY6.jpg" alt="Gallery photo 6" />
+        <div class="overlay"><span>SOMETHING</span></div>
+      </div>
+      <div class="gallery-item g7 reveal">
+        <img src="Images/GALLERY7.jpg" alt="Gallery photo 7" />
+        <div class="overlay"><span>SOMETHING</span></div>
+      </div>
+      <div class="gallery-item g8 reveal">
+        <img src="Images/GALLERY8.jpg" alt="Gallery photo 8" />
+        <div class="overlay"><span>SOMETHING</span></div>
+      </div>
+      <div class="gallery-item g9 reveal">
+        <img src="Images/GALLERY9.jpg" alt="Gallery photo 9" />
+        <div class="overlay"><span>Moments</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ABOUT ── -->
+  <section id="about">
+    <div class="about-img-wrap reveal">
+      <img src="Images/JORJIA.JPG" alt="Jorja Abernethy" />
+    </div>
+    <div class="about-content reveal">
+      <p class="section-label">About Me</p>
+      <h2 class="section-heading about-title">Hi, I'm<br>Jorja.</h2>
+      <p class="about-body">
+        I’m a Mid-Canterbury-based photographer focused on capturing sport, people, and real-life moments as they unfold. My style is natural, energetic, and story-driven — aiming to show the intensity, emotion, and personality behind every shot, so your photos feel like <em>you</em>, just in the moment.
+      </p>
+      <p class="about-body">
+        Whether it’s a game day on the sideline, a training session in motion, or capturing the people and stories behind your business, I show up ready to document real moments as they happen — fast, honest, and full of energy.
+      </p>
+      <p class="about-sig">— Jorja x</p>
+
+      <div class="about-stats">
+        <div>
+          <p class="stat-num">We Can </p>
+          <p class="stat-label">Remove these</p>
+        </div>
+        <div>
+          <p class="stat-num">little</p>
+          <p class="stat-label">bits if</p>
+        </div>
+        <div>
+          <p class="stat-num">you</p>
+          <p class="stat-label">want</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CONTACT ── -->
+  <section id="contact">
+    <div class="contact-info reveal">
+      <p class="section-label">Get in Touch</p>
+      <h2 class="section-heading contact-title">Let's create<br>something.</h2>
+      <p class="contact-body">
+        I'd love to hear about your vision.
+      </p>
+      <ul class="contact-details">
+        <li>
+          <div class="icon">
+            <svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          </div>
+          THE EMAIL YOU WANT HERE
+        </li>
+        <li>
+          <div class="icon">
+            <svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C9.6 21 3 14.4 3 6c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+          </div>
+          Available upon enquiry
+        </li>
+        <li>
+          <div class="icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          </div>
+          Ashburton, New Zealand
+        </li>
+      </ul>
+    </div>
+
+<form class="contact-form reveal" id="contact-form" action="https://api.web3forms.com/submit" method="POST">
+  
+  <!-- Web3Forms Access Key -->
+  <input type="hidden" name="access_key" value="8ce88f5a-142a-45a0-b407-413f15f2911a">
+
+  <div class="form-row">
+    <div class="form-group">
+      <label for="fname">First Name</label>
+      <input type="text" id="fname" name="first_name" placeholder="Jane" required />
+    </div>
+
+    <div class="form-group">
+      <label for="lname">Last Name</label>
+      <input type="text" id="lname" name="last_name" placeholder="Smith" required />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="email">Email Address</label>
+    <input type="email" id="email" name="email" placeholder="jane@email.com" required />
+  </div>
+
+  <div class="form-group">
+    <label for="phone">Phone Number</label>
+    <input type="tel" id="phone" name="phone" placeholder="+64 21 000 000" />
+  </div>
+
+  <div class="form-group">
+    <label for="message">Tell Me About Your Vision</label>
+    <textarea id="message" name="message" placeholder="What are you dreaming of?" required></textarea>
+  </div>
+
+  <button type="submit" class="btn-submit">Send Enquiry</button>
+
+  <p id="form-success" style="display:none; color:var(--coffee); font-size:0.85rem; margin-top:0.5rem;">
+    ✓ Thank you! I'll be in touch soon.
+  </p>
+
+</form>
+
+<script>
+const form = document.getElementById("contact-form");
+const successMessage = document.getElementById("form-success");
+
+form.addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const formData = new FormData(form);
+
+  fetch("https://api.web3forms.com/submit", {
+    method: "POST",
+    body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      successMessage.style.display = "block";
+      form.reset();
+    } else {
+      alert("Something went wrong. Please try again.");
+    }
+  })
+  .catch(() => {
+    alert("Network error. Please try again.");
+  });
+});
+</script>
+  </section>
+  <!-- ── FOOTER ── -->
+  <footer>
+    <div class="footer-inner">
+      <a href="#" class="footer-logo">
+        <img src="images/byjlogo.png" alt="Jorja Abernethy Logo">
+      </a>
+    </div>
+      <div class="footer-contact">
+        <!-- Instagram -->
+        <a href="https://www.instagram.com/byjorjaabernethy" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+          </svg>
+          @byjorjaabernethy
+        </a>
+        <!-- Mobile -->
+        <a href="tel:+64210000000">
+          <svg viewBox="0 0 24 24">
+            <path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C9.6 21 3 14.4 3 6c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/>
+          </svg>
+          +64 YOURPHONEHERE
+        </a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <nav class="footer-nav">
+        <a href="#gallery">Gallery</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </footer>
+
+<script>
+
+    // ── Nav scroll tint ──
+    const nav = document.querySelector('nav');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 60) {
+        nav.style.background = 'rgba(26,24,23,0.92)';
+        nav.style.backdropFilter = 'blur(10px)';
+        nav.style.mixBlendMode = 'normal';
+        document.querySelector('.nav-logo').style.color = '#f0e9db';
+        document.querySelectorAll('.nav-links a').forEach(a => a.style.color = '#f0e9db');
+      } else {
+        nav.style.background = 'transparent';
+        nav.style.backdropFilter = 'none';
+        nav.style.mixBlendMode = 'multiply';
+        document.querySelector('.nav-logo').style.color = '';
+        document.querySelectorAll('.nav-links a').forEach(a => a.style.color = '');
+      }
+    });
+
+    // ── Form submit ──
+    function handleSubmit(e) {
+      e.preventDefault();
+      document.getElementById('form-success').style.display = 'block';
+      e.target.reset();
+    }
+
+    const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+});
+
+document.querySelectorAll('.reveal').forEach(el => {
+  observer.observe(el);
+});
+  </script>
+</body>
+</html>
